@@ -41,6 +41,8 @@ void movePlayer(Player *player, char direction);
 Player *setupRoomAndPlayer();
 void gameIntro();
 void showGameResult(Player *player);
+void freeMemory(Player *player);
+
 
 
 int main(int argc, const char * argv[]) {
@@ -56,6 +58,8 @@ int main(int argc, const char * argv[]) {
     }
     
     showGameResult(player);
+    
+    freeMemory(player);
     
     return 0;
 }
@@ -190,6 +194,27 @@ void showGameResult(Player *player) {
     } else if (player->room->property == 2) {
         printf("Yeah! You found the treasure! You won!");
     }
+}
+
+void freeMemory(Player *player) {
+    
+    Room *previousRoom = player->room->previousRoom;
+    
+    while (previousRoom->previousRoom != NULL) {
+        Room *currentRoom = previousRoom;
+        previousRoom = previousRoom->previousRoom;
+        free(currentRoom);
+    }
+    free(previousRoom);
+    
+    while (player->room->nextRoom != NULL) {
+        Room *currentRoom = player->room;
+        player->room = player->room->nextRoom;
+        free(currentRoom);
+    }
+    free(player->room);
+
+    free(player);
 }
 
 
